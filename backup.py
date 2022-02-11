@@ -6,18 +6,17 @@ import matplotlib.pyplot as plt
 import pydeck as pdk 
 from dataminr import *
 from droneData import *
-pd.options.mode.chained_assignment = None  # default='warn'
 
 ### MAIN APP FLOW
 # page config
 st.set_page_config(layout="wide")
 st.markdown(""" <style>#MainMenu {visibility: hidden;}footer {visibility: hidden;}</style> """, unsafe_allow_html=True)
 # sliders and widgets
-#st.write(getFlights())
+st.write(getFlights())
 
-drones =  pdk.Layer('ScatterplotLayer', data=getFlights(),get_position='[lon, lat]', 
-    get_fill_color=[100,100,100], 
-    get_radius=70, auto_highlight=True,opacity=0.4, stroked=True, )
+# drones =  pdk.Layer('ScatterplotLayer', data=getFlights(),get_position='[geometry.coordinates[0], geometry.coordinates[1]]', 
+#     get_fill_color=[100,100,100], 
+#     get_radius=100, pickable=True, auto_highlight=True,opacity=0.5, stroked=True, )
 
 def changeStatus():
     st.write(f'<h1 style="text-align:center;margin-top:-70px;">DATAMINR SUPERBOWL ALERTS</h1>', unsafe_allow_html=True)
@@ -28,7 +27,7 @@ def changeStatus():
     st.pydeck_chart(pdk.Deck(
      map_style='road',
      initial_view_state=viewState,
-     layers=[scatter, drones],
+     layers=[scatter],
      tooltip=TOOLTIP_TEXT
  ))
 
@@ -40,8 +39,8 @@ data = dataminr.getDF()
 
 dfMap = data[['lat', 'lon', 'alertId', 'eventTime','caption','relatedTerms','eventLocation.name','headerLabel','dateTime']]
 dfMap2 = data[['lat', 'lon']]
-# hex =  pdk.Layer('HexagonLayer', data=getFlights(),get_position='[lon, lat]', get_fill_color=[200, 30, 0],
-#              extruded=True, elevation_scale=50, auto_highlight=True, opacity=0.2, coverage=1, elevation_range=[10, 1000])
+hex =  pdk.Layer('HexagonLayer', data=dfMap,get_position='[lon, lat]', get_fill_color=[200, 30, 0],
+             extruded=True, pickable=True, elevation_scale=100, auto_highlight=True, opacity=0.5, coverage=1)
 
 scatter =  pdk.Layer('ScatterplotLayer', data=dfMap,get_position='[lon, lat]', 
     get_fill_color=['headerLabel == "Urgent" ? 250 : 250', 'headerLabel == "Urgent" ? 0 : 150', 0], 
@@ -49,7 +48,7 @@ scatter =  pdk.Layer('ScatterplotLayer', data=dfMap,get_position='[lon, lat]',
 
 TOOLTIP_TEXT = {"html": "{caption} <br /> {eventLocation.name} <br /> Status: {headerLabel}<br /> UNIX Timestamp: {eventTime} <br /> DateTime: {dateTime}<br /> alertId: {alertId}"}
 #   get_fill_color=[200, 'headerLabel == "Urgent" ? 0 : 200', 0, 160],
-#dateTimes = dt.datetime.fromtimestamp(1644516042)
+dateTimes = dt.datetime.fromtimestamp(1644516042)
 
 dataList = data[['caption']]
 #st.sidebar.write(dataList)
@@ -72,7 +71,7 @@ if 'active' not in st.session_state:
     st.pydeck_chart(pdk.Deck(
         map_style='road',
         initial_view_state=viewState,
-        layers=[scatter, drones],
+        layers=[scatter],
         tooltip=TOOLTIP_TEXT
     ))
     #st.write(deckMap)
