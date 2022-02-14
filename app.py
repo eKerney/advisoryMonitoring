@@ -33,7 +33,7 @@ def changeStatus():
 
 dataminr = DATAMINR()
 dataminr.getLists()
-dataminr.getAlerts(30)
+dataminr.getAlerts(100)
 data = dataminr.getDF()
 
 dfMap = data[['lat', 'lon', 'alertId', 'eventTime','caption','relatedTerms','eventLocation.name','headerLabel','dateTime']]
