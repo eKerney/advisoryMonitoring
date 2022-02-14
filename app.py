@@ -54,7 +54,7 @@ dataList = data[['caption']]
 alert = st.sidebar.selectbox('CHOOSE ALERT', dataList, on_change=changeStatus)
 
 match = data[data.caption.str.startswith(alert)]
-keyList = ['caption','dateTime','eventLocation.name','alertType.name','post.link','source.link','alertId','lat', 'lon', 'relatedTerms',]
+keyList = ['caption','dateTime','eventLocation.name','alertType.name','post.link','alertId','lat', 'lon', 'relatedTerms',]
 
 
 for k in keyList:
